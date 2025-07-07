@@ -13,6 +13,7 @@
 		"cf-typegen": "wrangler types"
 	},
 	"dependencies": {
+		"hono": "^4.8.4",
 		"vue": "^3.5.17",
 		"vue-router": "^4.5.1"
 	},
