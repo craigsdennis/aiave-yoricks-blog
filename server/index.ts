@@ -22,18 +22,22 @@ app.get("/api/", async (c) => {
 
 app.get("/api/posts/latest", async (c) => {
   const { results }: D1Result<PostSummary> = await c.env.DB.prepare(
-    `SELECT * FROM posts WHERE status='published' LIMIT 20 ORDER by creation_date DESC;`
+    `SELECT * FROM posts WHERE status='published' ORDER BY created_at DESC LIMIT 20;`
   ).all();
   return c.json(results);
 });
 
 app.get("/api/posts/:slug", async (c) => {
   const { slug } = c.req.param();
-  const { results }: D1Result<PostSummary> = await c.env.DB.prepare(
+  const { results }: D1Result<Post> = await c.env.DB.prepare(
     `SELECT * FROM posts WHERE status='published' AND slug=?;`
   )
     .bind(slug)
     .all();
+  if (results.length === 0) {
+    return c.notFound();
+  }
+  return c.json(results[0]);
 });
 
 export default app;
