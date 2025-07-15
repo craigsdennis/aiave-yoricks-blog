@@ -28,7 +28,7 @@ import { RouterLink, RouterView } from 'vue-router'
           <a href="https://developers.cloudflare.com/workers-ai" class="footer-link">Workers AI</a>
         </div>
         <div class="footer-line">
-          <a href="https://github.com/craigsdennis" class="footer-link">👀 the code</a>
+          <a href="https://github.com/craigsdennis/ai-ave-yoricks-blog" class="footer-link">👀 the code</a>
         </div>
       </div>
     </footer>
