@@ -10,7 +10,8 @@
 		"build-only": "vite build",
 		"type-check": "vue-tsc --build",
 		"deploy": "npm run build && wrangler deploy",
-		"cf-typegen": "wrangler types"
+		"cf-typegen": "wrangler types",
+		"new-entry": "wrangler workflows trigger BlogPostCreator"
 	},
 	"dependencies": {
 		"hono": "^4.8.4",

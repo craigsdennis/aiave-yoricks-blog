@@ -13,6 +13,7 @@
         <h1>{{ post?.title }}</h1>
         <div class="post-meta">
           <span class="author">By Yorick</span>
+          <span class="category" @click="navigateToCategory(post?.category)" v-if="post?.category">{{ post.category }}</span>
           <span class="date">{{ post?.created_at ? formatDate(post.created_at) : '' }}</span>
         </div>
       </header>
@@ -23,7 +24,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { marked } from 'marked'
 
 interface Post {
@@ -31,9 +32,11 @@ interface Post {
   slug: string
   created_at: string
   content: string
+  category: string
 }
 
 const route = useRoute()
+const router = useRouter()
 const post = ref<Post | null>(null)
 const loading = ref(true)
 const error = ref(false)
@@ -49,6 +52,12 @@ const formatDate = (dateString: string) => {
     month: 'long',
     day: 'numeric'
   })
+}
+
+const navigateToCategory = (category: string | undefined) => {
+  if (category) {
+    router.push(`/category/${category}`)
+  }
 }
 
 onMounted(async () => {
@@ -141,6 +150,22 @@ onMounted(async () => {
 .author {
   color: #00d4ff;
   font-weight: bold;
+}
+
+.category {
+  background: rgba(100, 255, 218, 0.2);
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  border: 1px solid rgba(100, 255, 218, 0.4);
+  color: #64ffda;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.category:hover {
+  background: rgba(100, 255, 218, 0.3);
+  transform: scale(1.05);
 }
 
 .date {

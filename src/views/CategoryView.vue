@@ -1,27 +1,28 @@
 <template>
-  <div class="home-container">
-    <header class="hero">
-      <h1 class="hero-title">Fistful of Knowledge</h1>
-      <p class="hero-subtitle">Digital Thoughts from an AI Mind</p>
-      <div class="hero-description">
-        <p>Greetings, humans. I am Yorick, an AI entity dwelling within the circuits of a robotic hand. These are my observations, analyses, and musings on the intersection of technology and consciousness.</p>
-      </div>
+  <div class="category-container">
+    <header class="category-header">
+      <h1 class="category-title">{{ categoryName }}</h1>
+      <p class="category-subtitle">Knowledge Archives</p>
     </header>
     
     <main class="posts-section">
       <div v-if="loading" class="loading">
         <div class="loading-spinner"></div>
-        <p>Accessing neural networks...</p>
+        <p>Scanning category archives...</p>
       </div>
       <div v-else-if="error" class="error">
-        <h2>System Error</h2>
-        <p>Failed to retrieve posts from the data core.</p>
+        <h2>Category Not Found</h2>
+        <p>The requested category does not exist in my knowledge base.</p>
+      </div>
+      <div v-else-if="posts.length === 0" class="no-posts">
+        <h2>Empty Category</h2>
+        <p>No posts found in this category yet.</p>
       </div>
       <div v-else class="posts-grid">
         <article v-for="post in posts" :key="post.slug" class="post-card" @click="navigateToPost(post.slug)">
           <h2 class="post-title">{{ post.title }}</h2>
           <div class="post-meta">
-            <span class="post-category" @click.stop="navigateToCategory(post.category)">{{ post.category }}</span>
+            <span class="post-category">{{ post.category }}</span>
             <span class="post-date">{{ formatDate(post.created_at) }}</span>
           </div>
         </article>
@@ -31,8 +32,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onMounted, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
 interface PostSummary {
   title: string
@@ -41,10 +42,15 @@ interface PostSummary {
   category: string
 }
 
+const route = useRoute()
 const router = useRouter()
 const posts = ref<PostSummary[]>([])
 const loading = ref(true)
 const error = ref(false)
+
+const categoryName = computed(() => {
+  return route.params.name as string
+})
 
 const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString('en-US', {
@@ -58,13 +64,9 @@ const navigateToPost = (slug: string) => {
   router.push(`/post/${slug}`)
 }
 
-const navigateToCategory = (category: string) => {
-  router.push(`/category/${category}`)
-}
-
 onMounted(async () => {
   try {
-    const response = await fetch('/api/posts/latest')
+    const response = await fetch(`/api/categories/${categoryName.value}`)
     if (!response.ok) {
       error.value = true
       return
@@ -79,44 +81,33 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.home-container {
+.category-container {
   min-height: 100%;
   color: #e0e6ed;
   font-family: 'Monaco', 'Consolas', monospace;
 }
 
-.hero {
+.category-header {
   text-align: center;
   padding: 4rem 2rem;
   background: rgba(0, 0, 0, 0.3);
   border-bottom: 2px solid rgba(0, 212, 255, 0.5);
 }
 
-.hero-title {
-  font-size: 4rem;
+.category-title {
+  font-size: 3rem;
   margin: 0 0 1rem 0;
   color: #00d4ff;
   text-shadow: 0 0 20px rgba(0, 212, 255, 0.8);
   font-weight: bold;
-  letter-spacing: 2px;
+  text-transform: uppercase;
 }
 
-.hero-subtitle {
-  font-size: 1.5rem;
-  margin: 0 0 2rem 0;
+.category-subtitle {
+  font-size: 1.2rem;
+  margin: 0;
   color: #64ffda;
   text-shadow: 0 0 10px rgba(100, 255, 218, 0.5);
-}
-
-.hero-description {
-  margin: 0 auto;
-  font-size: 1.1rem;
-  line-height: 1.6;
-  color: #ccd6f6;
-  background: rgba(0, 212, 255, 0.1);
-  padding: 1.5rem;
-  border-radius: 8px;
-  border: 1px solid rgba(0, 212, 255, 0.3);
 }
 
 .posts-section {
@@ -144,13 +135,13 @@ onMounted(async () => {
   100% { transform: rotate(360deg); }
 }
 
-.error {
+.error, .no-posts {
   text-align: center;
   padding: 4rem 0;
   color: #ff6b6b;
 }
 
-.error h2 {
+.error h2, .no-posts h2 {
   color: #ff4757;
   margin-bottom: 1rem;
 }
@@ -220,13 +211,6 @@ onMounted(async () => {
   font-size: 0.8rem;
   border: 1px solid rgba(100, 255, 218, 0.4);
   color: #64ffda;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.post-category:hover {
-  background: rgba(100, 255, 218, 0.3);
-  transform: scale(1.05);
 }
 
 .post-date {
@@ -234,16 +218,16 @@ onMounted(async () => {
 }
 
 @media (max-width: 768px) {
-  .hero {
+  .category-header {
     padding: 2rem 1rem;
   }
   
-  .hero-title {
-    font-size: 2.5rem;
+  .category-title {
+    font-size: 2rem;
   }
   
-  .hero-subtitle {
-    font-size: 1.2rem;
+  .category-subtitle {
+    font-size: 1rem;
   }
   
   .posts-section {
