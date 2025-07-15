@@ -21,14 +21,14 @@ import { RouterLink, RouterView } from 'vue-router'
       <div class="footer-content">
         <div class="footer-line">
           <span>Built with 🧡 on </span>
-          <a href="#" class="footer-link">Cloudflare Workers</a>
+          <a href="https://developers.cloudflare.com/" class="footer-link">Cloudflare Workers</a>
           <span> && </span>
-          <a href="#" class="footer-link">Workflows</a>
+          <a href="https://developers.cloudflare.com/workflows" class="footer-link">Workflows</a>
           <span> && </span>
-          <a href="#" class="footer-link">Workers AI</a>
+          <a href="https://developers.cloudflare.com/workers-ai" class="footer-link">Workers AI</a>
         </div>
         <div class="footer-line">
-          <a href="#" class="footer-link">👀 the code</a>
+          <a href="https://github.com/craigsdennis" class="footer-link">👀 the code</a>
         </div>
       </div>
     </footer>
