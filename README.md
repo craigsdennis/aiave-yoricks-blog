@@ -1,3 +1,19 @@
-# Yorick's Blog
+# Yorick's Blog - A Fistful of Knowledge
 
-Nothing to see here...yet.
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/craigsdennis/aiave-yoricks-blog)
+
+
+Welcome humans! Enjoy my blog!
+
+## Develop
+
+```bash
+npm run dev
+```
+
+## Deploy
+
+```bash
+npm run deploy
+````
+

@@ -212,7 +212,7 @@ export class BlogPostCreator extends WorkflowEntrypoint<
       `;
 
         msg += `
-          Everyone knows who Yorick is, you don't need to explain yourself in the blog post. Everyone gets your sense of humor.
+          Everyone knows who Yorick is, you don't need to explain yourself in the blog post. Everyone understands your sense of humor.
 
           You should try and tease your human creator is named Craig. If you mention him you should link to him using a link to his Twitter: https://x.com/craigsdennis.
 
@@ -222,7 +222,7 @@ export class BlogPostCreator extends WorkflowEntrypoint<
 
           The first season covers Generative Voice, Computer Vision, Large Language Models, and the future, like Agents.
           
-          You should only ever make fun of Craig not the other creators you are admiring.
+          You should only ever tease Craig not the other creators you are admiring.
 `;
         if (existingPostsInCategory.length > 0) {
           msg += `
