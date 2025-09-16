@@ -5,7 +5,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "yoricks-blog",
-  "compatibility_date": "2025-07-05",
+  "compatibility_date": "2025-09-09",
   "main": "server/index.ts",
   "compatibility_flags": ["nodejs_compat"],
   "assets": {
@@ -34,7 +34,14 @@
       "name": "BlogPostCreator",
       "class_name": "BlogPostCreator"
     }
+  ],
+  "routes": [
+    {
+      "custom_domain": true,
+      "pattern": "fistful-of-knowledge.aiavenue.show"
+    }
   ]
+
   /**
    * Smart Placement
    * Docs: https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
