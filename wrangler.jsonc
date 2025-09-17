@@ -22,7 +22,7 @@
       "database_id": "c19d1d34-8346-485f-a394-131809301335"
     }
   ],
-  "ai": { "binding": "AI" },
+  "ai": { "binding": "AI", "remote": true },
   "workflows": [
     {
       "binding": "CATEGORY_CREATOR",
