@@ -20,7 +20,7 @@ export interface AdminPost {
   title: string;
   slug: string;
   content: string;
-  status: 'draft' | 'published' | 'archived';
+  status: "draft" | "published" | "archived";
   category_id: number;
   created_at: string;
   published_at: string | null;
@@ -30,7 +30,7 @@ export interface AdminPost {
 export interface PostUpdateData {
   title?: string;
   content?: string;
-  status?: 'draft' | 'published' | 'archived';
+  status?: "draft" | "published" | "archived";
   category_id?: number;
 }
 
@@ -118,74 +118,76 @@ app.get("/api/admin/posts/:slug", async (c) => {
 app.put("/api/admin/posts/:slug", async (c) => {
   const { slug } = c.req.param();
   const updateData: PostUpdateData = await c.req.json();
-  
+
   const updates = [];
   const values = [];
-  
+
   if (updateData.title !== undefined) {
-    updates.push('title = ?');
+    updates.push("title = ?");
     values.push(updateData.title);
   }
-  
+
   if (updateData.content !== undefined) {
-    updates.push('content = ?');
+    updates.push("content = ?");
     values.push(updateData.content);
   }
-  
+
   if (updateData.status !== undefined) {
-    updates.push('status = ?');
+    updates.push("status = ?");
     values.push(updateData.status);
-    
-    if (updateData.status === 'published') {
-      updates.push('published_at = ?');
+
+    if (updateData.status === "published") {
+      updates.push("published_at = ?");
       values.push(new Date().toISOString());
     }
   }
-  
+
   if (updateData.category_id !== undefined) {
-    updates.push('category_id = ?');
+    updates.push("category_id = ?");
     values.push(updateData.category_id);
   }
-  
+
   if (updates.length === 0) {
-    return c.json({ error: 'No valid fields to update' }, 400);
+    return c.json({ error: "No valid fields to update" }, 400);
   }
-  
+
   values.push(slug);
-  
-  const query = `UPDATE posts SET ${updates.join(', ')} WHERE slug = ?`;
-  
+
+  const query = `UPDATE posts SET ${updates.join(", ")} WHERE slug = ?`;
+
   try {
-    await c.env.DB.prepare(query).bind(...values).run();
-    
+    await c.env.DB.prepare(query)
+      .bind(...values)
+      .run();
+
     // Return updated post
     const { results }: D1Result<AdminPost> = await c.env.DB.prepare(
       `SELECT posts.*, categories.name as 'category' FROM posts JOIN categories ON posts.category_id = categories.id WHERE slug=?;`
     )
       .bind(slug)
       .all();
-    
+
     return c.json(results[0]);
   } catch (error) {
-    return c.json({ error: 'Failed to update post' }, 500);
+    return c.json({ error: "Failed to update post" }, 500);
   }
 });
 
 app.delete("/api/admin/posts/:slug", async (c) => {
   const { slug } = c.req.param();
-  
+
   try {
-    const result = await c.env.DB.prepare(
-      `DELETE FROM posts WHERE slug = ?`
-    ).bind(slug).run();
-    
+    const result = await c.env.DB.prepare(`DELETE FROM posts WHERE slug = ?`)
+      .bind(slug)
+      .run();
+
     if (result.meta.changes === 0) {
       return c.notFound();
     }
-    
-    return c.json({ message: 'Post deleted successfully' });
+
+    return c.json({ message: "Post deleted successfully" });
   } catch (error) {
-    return c.json({ error: 'Failed to delete post' }, 500);
+    return c.json({ error: "Failed to delete post" }, 500);
   }
 });
 
@@ -197,4 +199,14 @@ app.get("/api/admin/categories", async (c) => {
   return c.json(results);
 });
 
-export default app;
+export default {
+  fetch: app.fetch,
+  async scheduled(
+    controller: ScheduledController,
+    env: Env,
+    ctx: ExecutionContext
+  ) {
+    console.log("Time to make the donuts");
+    ctx.waitUntil(env.BLOG_POST_CREATOR.create());
+  },
+};

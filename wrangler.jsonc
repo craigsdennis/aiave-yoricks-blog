@@ -35,6 +35,9 @@
       "class_name": "BlogPostCreator"
     }
   ],
+  "triggers": {
+    "crons": ["0 9 * * *"]
+  },
   "routes": [
     {
       "custom_domain": true,
